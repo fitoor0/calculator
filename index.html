@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChordVerse — Global Guitar Chords Finder</title>
+    <style>
+        /* Modern CSS Custom Variables for Easy Styling */
+        :root {
+            --bg-dark: #0b0f19;
+            --bg-card: rgba(22, 30, 49, 0.7);
+            --accent-cyan: #00f2fe;
+            --accent-purple: #4facfe;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --border-glow: rgba(0, 242, 254, 0.2);
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-dark);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(79, 172, 254, 0.08) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(0, 242, 254, 0.05) 0px, transparent 50%);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Beautiful Neon Header */
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        header h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin: 0 0 10px 0;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 2px 8px rgba(0, 242, 254, 0.3));
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            margin: 0;
+        }
+
+        /* Glassmorphism Search Bar Container */
+        .search-wrapper {
+            background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 8px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            gap: 10px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            margin-bottom: 40px;
+            transition: box-shadow 0.3s, border-color 0.3s;
+        }
+
+        .search-wrapper:focus-within {
+            border-color: rgba(0, 242, 254, 0.5);
+            box-shadow: 0 0 20px rgba(0, 242, 254, 0.2);
+        }
+
+        .search-wrapper input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            padding: 14px 18px;
+            color: white;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .search-wrapper input::placeholder {
+            color: #64748b;
+        }
+
+        .search-wrapper button {
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));
+            color: #0b0f19;
+            border: none;
+            padding: 0 28px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            transition: transform 0.1s, opacity 0.2s;
+        }
+
+        .search-wrapper button:hover {
+            opacity: 0.9;
+        }
+
+        .search-wrapper button:active {
+            transform: scale(0.98);
+        }
+
+        /* Beautiful Dynamic Results Layout */
+        .results-feed {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .song-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            padding: 24px;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .song-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--accent-purple), var(--accent-cyan));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .song-card:hover {
+            transform: translateX(4px);
+            background: rgba(30, 41, 59, 0.7);
+            border-color: rgba(0, 242, 254, 0.2);
+        }
+
+        .song-card:hover::before {
+            opacity: 1;
+        }
+
+        .song-card h3 {
+            margin: 0 0 10px 0;
+            font-size: 1.4rem;
+            font-weight: 600;
+        }
+
+        .song-card h3 a {
+            color: var(--accent-cyan);
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .song-card h3 a:hover {
+            color: white;
+        }
+
+        .song-card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        /* High-Converting Ad Placements */
+        .premium-ad-slot {
+            background: rgba(30, 41, 59, 0.4);
+            border: 1px dashed rgba(0, 242, 254, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            color: #475569;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin: 30px 0;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 60px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: #475569;
+            font-size: 14px;
+        }
+
+        footer a {
+            color: var(--text-muted);
+            text-decoration: none;
+            margin-left: 10px;
+        }
+
+        footer a:hover {
+            color: var(--accent-cyan);
+        }
+
+        /* Loading Animation */
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255,255,255,0.1);
+            border-top-color: var(--accent-cyan);
+            border-radius: 50%;
+            margin: 30px auto;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>🎸 ChordVerse</h1>
+            <p>Unlock accurate chords & tabs for any song on earth</p>
+        </header>
+
+        <div class="premium-ad-slot">Advertisement Space (Google AdSense Top Banner)</div>
+
+        <div class="search-wrapper">
+            <input type="text" id="searchInput" placeholder="Search song title or artist... (e.g. Perfect Ed Sheeran chords)">
+            <button onclick="triggerGlobalSearch()">Find Chords</button>
+        </div>
+
+        <div id="resultsWrapper" class="results-feed">
+            <p style="text-align: center; color: var(--text-muted); margin-top: 20px;">The world's music library is at your fingertips. Enter a query above to scan databases...</p>
+        </div>
+
+        <div class="premium-ad-slot">Advertisement Space (Google AdSense In-Article Ad)</div>
+
+        <footer>
+            <p>&copy; 2026 ChordVerse. All rights reserved. | <a href="privacy-policy.html">Privacy Policy</a></p>
+        </footer>
+    </div>
+
+    <script>
+        // Trigger search instantly if user presses 'Enter' key inside input field
+        document.getElementById('searchInput').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                triggerGlobalSearch();
+            }
+        });
+
+        function triggerGlobalSearch() {
+            const queryValue = document.getElementById('searchInput').value.trim();
+            const resultsPane = document.getElementById('resultsWrapper');
+
+            if (!queryValue) {
+                alert("Please type a track title or artist name!");
+                return;
+            }
+
+            // Injected beautiful interactive loading spinner element
+            resultsPane.innerHTML = '<div class="spinner"></div><p style="text-align: center; color: var(--accent-cyan);">Scanning chords indices...</p>';
+
+            // PASTE THE CREDENTIAL KEYS YOU GENERATED IN THE STEPS BEFORE RIGHT HERE
+            const GOOGLE_API_KEY = "AIzaSyBkwDzyVnqfliX6J__u9fEPqnctPyXyZvg"; 
+            const SEARCH_ENGINE_CX = "7704fb6330ada4eff"; 
+
+            // Formulate query securely matching top tabs frameworks globally
+            const cleanQuery = encodeURIComponent(queryValue + " (chords OR tabs OR guitar chords)");
+            const apiEndpoint = `https://www.googleapis.com/customsearch/v1?key=${GOOGLE_API_KEY}&cx=${SEARCH_ENGINE_CX}&q=${cleanQuery}`;
+
+            fetch(apiEndpoint)
+                .then(response => response.json())
+                .then(data => {
+                    resultsPane.innerHTML = ''; // Clear loading screen
+
+                    if (!data.items || data.items.length === 0) {
+                        resultsPane.innerHTML = '<p style="text-align: center; color: #f43f5e;">No direct chord match indexes found. Try refining keywords.</p>';
+                        return;
+                    }
+
+                    // Map array structure data dynamically into new responsive UI card models
+                    data.items.forEach(song => {
+                        const card = document.createElement('div');
+                        card.className = 'song-card';
+                        card.innerHTML = `
+                            <h3><a href="${song.link}" target="_blank" rel="noopener">${song.title}</a></h3>
+                            <p>${song.snippet}</p>
+                        `;
+                        resultsPane.appendChild(card);
+                    });
+                })
+                .catch(err => {
+                    resultsPane.innerHTML = '<p style="text-align: center; color: #f43f5e;">Connection timed out. Please check your internet connection.</p>';
+                    console.error(err);
+                });
+        }
+    </script>
+</body>
+</html>
